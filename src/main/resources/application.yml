@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: APi-inventario
+  datasource:
+    url: jdbc:sqlite:./inventario.db
+    driver-class-name: org.sqlite.JDBC
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+    show-sql: true
