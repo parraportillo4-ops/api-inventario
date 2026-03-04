@@ -1,5 +1,6 @@
 package com.unicartagena.APi_inventario.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -46,6 +47,10 @@ public class Usuario {
     @Column(length = 55)
     @NotBlank
     private String ubicacion;
+
+    @JsonIgnore
+    @Column(name = "password_hash", length = 100)
+    private String passwordHash;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inventario> inventario;
