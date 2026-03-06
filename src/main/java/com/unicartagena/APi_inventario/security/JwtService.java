@@ -40,10 +40,10 @@ public class JwtService {
                 .compact();
     }
 
-    public boolean isTokenValid(String token) {
+    public boolean isTokenValid(String token) { // es el token Valido?
         try {
-            parse(token);
-            return true;
+            parse(token); // intentar parsear el token
+            return true; // invalid token 
         } catch (JwtException | IllegalArgumentException ex) {
             return false;
         }

@@ -21,14 +21,14 @@ public class ProductoService {
     public Producto findById(Long id) {
         return repo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Producto no encontrado con id " + id));
     }
-
-public Producto save(ProductoRequestDTO pDto) {
-    Producto producto = new Producto();
-    producto.setNombreProducto(pDto.getNombreProducto());
-    producto.setDescripcion(pDto.getDescripcion());
-    producto.setUnidadMedida(pDto.getUnidadMedida());
-    return repo.save(producto);
-}
+// comment
+    public Producto save(ProductoRequestDTO pDto) {
+        Producto producto = new Producto();
+        producto.setNombreProducto(pDto.getNombreProducto());
+        producto.setDescripcion(pDto.getDescripcion());
+        producto.setUnidadMedida(pDto.getUnidadMedida());
+        return repo.save(producto);
+    }
 
     public Producto update(Long id, ProductoRequestDTO pDto) {
         Producto existing = findById(id);
