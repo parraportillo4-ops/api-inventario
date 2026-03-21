@@ -1,5 +1,6 @@
 package com.unicartagena.APi_inventario.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -21,23 +22,26 @@ public class Transaccion {
 
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_producto")
     @NotNull(message = "El producto no puede ser nulo")
+    @JsonIgnoreProperties({"inventarios", "hibernateLazyInitializer", "handler"})
     private Producto producto;
 
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_vendedor")
     @NotNull(message = "El vendedor no puede ser nulo")
+    @JsonIgnoreProperties({"inventario", "hibernateLazyInitializer", "handler"})
     private Usuario vendedor;
 
 
     @NonNull
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_comprador")
     @NotNull(message = "El comprador no puede ser nulo")
+    @JsonIgnoreProperties({"inventario", "hibernateLazyInitializer", "handler"})
     private Usuario comprador;
 
     @NonNull

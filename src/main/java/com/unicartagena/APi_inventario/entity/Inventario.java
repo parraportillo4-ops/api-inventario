@@ -1,5 +1,6 @@
 package com.unicartagena.APi_inventario.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -25,13 +26,14 @@ public class Inventario {
     @JoinColumn(name = "id_usuario")
     @NotNull
     @NonNull
+    @JsonIgnoreProperties("inventario")
     private Usuario usuario;
 
     @ManyToOne
     @JoinColumn(name = "id_producto")
     @NotNull
     @NonNull
-
+    @JsonIgnoreProperties("inventarios")
     private Producto producto;
 
     @NonNull

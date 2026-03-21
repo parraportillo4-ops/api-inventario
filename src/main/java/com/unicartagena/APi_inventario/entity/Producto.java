@@ -1,5 +1,6 @@
 package com.unicartagena.APi_inventario.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
@@ -34,6 +35,7 @@ public class Producto {
     @NotBlank
     private String unidadMedida;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "producto", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inventario> inventarios;
 

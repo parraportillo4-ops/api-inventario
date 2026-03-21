@@ -52,6 +52,7 @@ public class Usuario {
     @Column(name = "password_hash", length = 100)
     private String passwordHash;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Inventario> inventario;
 }
