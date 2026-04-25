@@ -1,1 +1,5 @@
 inventario.db
+
+# Frontend (Vite)
+front/node_modules/
+front/dist/

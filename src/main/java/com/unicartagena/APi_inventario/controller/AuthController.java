@@ -37,11 +37,13 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
-        if (usuarioRepository.existsByCorreo(request.correo())) {
+        if (usuarioRepository.existsByCorreo(request.correo())) { // comprobar si el correo ya existe 
             return ResponseEntity.status(HttpStatus.CONFLICT).body("El correo ya está registrado");
         }
 
-        Usuario usuario = new Usuario();
+        Usuario usuario = new Usuario(); // creacion del usuario
+
+        // establecer atributos
         usuario.setNombre(request.nombre());
         usuario.setApellido(request.apellido());
         usuario.setTipoUsuario(request.tipoUsuario());
@@ -51,19 +53,19 @@ public class AuthController {
         usuario.setPasswordHash(passwordEncoder.encode(request.password()));
 
         Usuario saved = usuarioRepository.save(usuario);
-        String token = jwtService.generateToken(saved.getCorreo());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token));
+        String token = jwtService.generateToken(saved.getCorreo()); // generacion del token
+        return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token)); // envio del token al cliente
     }
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
+        Authentication authentication = authenticationManager.authenticate( // autenticación
                 new UsernamePasswordAuthenticationToken(request.correo(), request.password())
         );
 
         String subject = authentication.getName();
-        String token = jwtService.generateToken(subject);
-        return ResponseEntity.ok(new AuthResponse(token));
+        String token = jwtService.generateToken(subject); // generacion del token
+        return ResponseEntity.ok(new AuthResponse(token)); // envio del token al cliente
     }
 
     public record LoginRequest(
