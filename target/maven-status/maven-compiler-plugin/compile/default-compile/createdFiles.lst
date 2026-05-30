@@ -1,0 +1,7 @@
+com\unicartagena\APi_inventario\config\SqliteSchemaPatcher.class
+com\unicartagena\APi_inventario\config\DatabaseSeeder$DemoProduct.class
+com\unicartagena\APi_inventario\security\SecurityUtils.class
+com\unicartagena\APi_inventario\config\DatabaseSeeder.class
+com\unicartagena\APi_inventario\exception\GlobalExceptionHandler.class
+com\unicartagena\APi_inventario\config\DatabaseSeeder$DemoUser.class
+com\unicartagena\APi_inventario\exception\ForbiddenException.class

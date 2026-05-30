@@ -4,6 +4,19 @@ import * as transaccionesApi from '../api/transacciones'
 import type { Transaccion } from '../api/types'
 import tableStyles from '../styles/pages/tables.module.css'
 
+function formatUserName(nombre: string, apellido: string) {
+  return `${nombre} ${apellido}`.trim()
+}
+
+function getUserRoleInTransaction(
+  tx: Transaccion,
+  userId: number,
+): 'venta' | 'compra' | 'observador' {
+  if (tx.vendedor.idUsuario === userId) return 'venta'
+  if (tx.comprador.idUsuario === userId) return 'compra'
+  return 'observador'
+}
+
 export function TransaccionesPage() {
   const { user } = useAuth()
   const [rows, setRows] = useState<Transaccion[]>([])
@@ -17,10 +30,8 @@ export function TransaccionesPage() {
     try {
       const all = await transaccionesApi.listTransacciones()
       setRows(
-        all.filter(
-          (tx) =>
-            tx.vendedor.idUsuario === user.idUsuario ||
-            tx.comprador.idUsuario === user.idUsuario,
+        [...all].sort(
+          (a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime(),
         ),
       )
     } catch {
@@ -37,50 +48,73 @@ export function TransaccionesPage() {
   if (!user) return null
 
   return (
-    <section className={tableStyles.panel}>
-      <h2 className={tableStyles.heading}>Mis transacciones</h2>
+    <section>
+      <h2 className={tableStyles.heading} style={{ marginTop: 0 }}>
+        Transacciones
+      </h2>
+      <p className={tableStyles.muted}>
+        Registro público de ventas entre productores y compradores.
+      </p>
       {loading && <p className={tableStyles.muted}>Cargando…</p>}
       {error && <p className={tableStyles.error}>{error}</p>}
       {!loading && !error && rows.length === 0 && (
-        <p className={tableStyles.empty}>No hay transacciones registradas.</p>
+        <div className={tableStyles.panel}>
+          <p className={tableStyles.empty}>No hay transacciones registradas.</p>
+        </div>
       )}
       {!loading && rows.length > 0 && (
-        <table className={tableStyles.table}>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Producto</th>
-              <th>Vendedor</th>
-              <th>Comprador</th>
-              <th>Cantidad</th>
-              <th>Precio</th>
-              <th>Fecha</th>
-            </tr>
-          </thead>
-          <tbody>
-            {rows.map((tx) => {
-              const esVenta = tx.vendedor.idUsuario === user.idUsuario
-              return (
-                <tr
-                  key={tx.idTransaccion}
-                  className={esVenta ? tableStyles.rowSale : tableStyles.rowBuy}
-                >
-                  <td>{tx.idTransaccion}</td>
-                  <td>{tx.producto.nombreProducto}</td>
-                  <td>
-                    {esVenta ? 'Yo' : `${tx.vendedor.nombre} ${tx.vendedor.apellido}`}
-                  </td>
-                  <td>
-                    {!esVenta ? 'Yo' : `${tx.comprador.nombre} ${tx.comprador.apellido}`}
-                  </td>
-                  <td>{tx.cantidad}</td>
-                  <td>${tx.precio}</td>
-                  <td>{new Date(tx.fecha).toLocaleString()}</td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
+        <div className={tableStyles.grid}>
+          {rows.map((tx) => {
+            const rol = getUserRoleInTransaction(tx, user.idUsuario)
+            const cardClass =
+              rol === 'venta'
+                ? tableStyles.cardSale
+                : rol === 'compra'
+                  ? tableStyles.cardBuy
+                  : tableStyles.cardNeutral
+            const badgeClass =
+              rol === 'venta'
+                ? tableStyles.badgeSale
+                : rol === 'compra'
+                  ? tableStyles.badgeBuy
+                  : tableStyles.badgeNeutral
+            const badgeLabel =
+              rol === 'venta'
+                ? 'Tu venta'
+                : rol === 'compra'
+                  ? 'Tu compra'
+                  : 'Venta registrada'
+
+            return (
+              <article key={tx.idTransaccion} className={`${tableStyles.card} ${cardClass}`}>
+                <span className={badgeClass}>{badgeLabel}</span>
+                <h3 className={tableStyles.cardTitle}>{tx.producto.nombreProducto}</h3>
+                <p className={tableStyles.cardMeta}>
+                  <strong>Productor:</strong>{' '}
+                  {rol === 'venta'
+                    ? 'Yo'
+                    : formatUserName(tx.vendedor.nombre, tx.vendedor.apellido)}
+                </p>
+                <p className={tableStyles.cardMeta}>
+                  <strong>Comprador:</strong>{' '}
+                  {rol === 'compra'
+                    ? 'Yo'
+                    : formatUserName(tx.comprador.nombre, tx.comprador.apellido)}
+                </p>
+                <p className={tableStyles.cardMeta}>
+                  <strong>Cantidad:</strong> {tx.cantidad}{' '}
+                  {tx.producto.unidadMedida}
+                </p>
+                <p className={tableStyles.cardMeta}>
+                  <strong>Precio:</strong> ${tx.precio}
+                </p>
+                <p className={tableStyles.cardMeta}>
+                  <strong>Fecha:</strong> {new Date(tx.fecha).toLocaleString()}
+                </p>
+              </article>
+            )
+          })}
+        </div>
       )}
     </section>
   )

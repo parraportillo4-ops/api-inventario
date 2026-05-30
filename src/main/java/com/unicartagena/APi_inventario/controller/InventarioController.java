@@ -2,6 +2,8 @@ package com.unicartagena.APi_inventario.controller;
 
 import com.unicartagena.APi_inventario.entity.Inventario;
 import com.unicartagena.APi_inventario.service.InventarioService;
+import com.unicartagena.APi_inventario.exception.ForbiddenException;
+import com.unicartagena.APi_inventario.security.SecurityUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,19 +16,39 @@ import java.util.List;
 public class InventarioController {
 
     private final InventarioService service;
+    private final SecurityUtils securityUtils;
 
-    public InventarioController(InventarioService service) {
+    public InventarioController(InventarioService service, SecurityUtils securityUtils) {
         this.service = service;
+        this.securityUtils = securityUtils;
     }
 
     @GetMapping
     public List<Inventario> listar() {
+        if (!securityUtils.isAdmin()) {
+            throw new ForbiddenException("Solo el administrador puede listar todo el inventario");
+        }
         return service.findAll();
+    }
+
+    @GetMapping("/mios")
+    public List<Inventario> listarMios() {
+        return service.findMine();
+    }
+
+    @GetMapping("/mercado")
+    public List<Inventario> listarMercado() {
+        return service.findMercado();
+    }
+
+    @GetMapping("/productor/{idUsuario}")
+    public List<Inventario> listarPorProductor(@PathVariable Long idUsuario) {
+        return service.findPublicacionesByProductor(idUsuario);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Inventario> obtener(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+        return ResponseEntity.ok(service.findByIdVisible(id));
     }
 
     @PostMapping

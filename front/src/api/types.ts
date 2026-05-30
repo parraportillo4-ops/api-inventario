@@ -13,6 +13,8 @@ export type Producto = {
   nombreProducto: string
   descripcion: string
   unidadMedida: string
+  precio: number
+  usuario?: Usuario | null
 }
 
 export type Inventario = {
@@ -21,6 +23,7 @@ export type Inventario = {
   producto: Producto
   cantidadDisponible: number
   fechaRegistro: string
+  precio: number
 }
 
 export type Transaccion = {

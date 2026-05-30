@@ -2,7 +2,7 @@ package com.unicartagena.APi_inventario.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import java.time.LocalDate;
@@ -46,5 +46,8 @@ public class Inventario {
     @NotNull
     private LocalDate fechaRegistro;
 
+    @Min(0)
+    @Column(name = "precio")
+    private Double precio;
 
 }

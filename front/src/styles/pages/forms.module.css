@@ -71,6 +71,22 @@
   cursor: not-allowed;
 }
 
+.btnDanger {
+  padding: 0.45rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid rgba(239, 68, 68, 0.35);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: rgba(239, 68, 68, 0.12);
+  color: var(--danger);
+}
+
+.btnDanger:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .formError {
   margin: 0 0 0.5rem;
   font-size: 0.85rem;

@@ -1,6 +1,8 @@
 package com.unicartagena.APi_inventario.dto;
 
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,4 +24,8 @@ public class ProductoRequestDTO {
     @NotBlank(message = "La unidad de medida es obligatoria")
     @Size(max = 20, message = "La unidad de medida no puede exceder los 20 caracteres")
     private String unidadMedida;
+
+    @NotNull(message = "El precio es obligatorio")
+    @Min(value = 0, message = "El precio no puede ser negativo")
+    private Double precio;
 }

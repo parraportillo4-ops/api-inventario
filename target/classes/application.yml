@@ -19,3 +19,16 @@ server:
 jwt:
   secret: ${JWT_SECRET:change-me-change-me-change-me-change-me}
   expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+
+app:
+  seed:
+    enabled: ${APP_SEED_ENABLED:true}
+    demo-password: ${APP_SEED_DEMO_PASSWORD:demo123456}
+    transacciones: ${APP_SEED_TRANSACCIONES:50}
+  admin:
+    correo: ${ADMIN_CORREO:admin@inventario.local}
+    password: ${ADMIN_PASSWORD:admin123456}
+    nombre: Admin
+    apellido: Sistema
+    telefono: "0000000000"
+    ubicacion: Sistema

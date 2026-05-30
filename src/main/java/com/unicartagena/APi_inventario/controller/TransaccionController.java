@@ -4,6 +4,7 @@ import com.unicartagena.APi_inventario.dto.TransaccionRequestDTO;
 import com.unicartagena.APi_inventario.entity.Transaccion;
 import com.unicartagena.APi_inventario.service.TransaccionService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
@@ -30,18 +31,21 @@ public class TransaccionController {
         return ResponseEntity.ok(service.findById(id));
     }
 
-@PostMapping
-public ResponseEntity<Transaccion> crear(@Valid @RequestBody TransaccionRequestDTO tDto) {
-    Transaccion creado = service.save(tDto);
-    return ResponseEntity.created(URI.create("/api/transacciones/" + creado.getIdTransaccion())).body(creado);
-}
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Transaccion> crear(@Valid @RequestBody TransaccionRequestDTO tDto) {
+        Transaccion creado = service.save(tDto);
+        return ResponseEntity.created(URI.create("/api/transacciones/" + creado.getIdTransaccion())).body(creado);
+    }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Transaccion> actualizar(@PathVariable Long id, @Valid @RequestBody TransaccionRequestDTO tDto) {
         return ResponseEntity.ok(service.update(id, tDto));
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> borrar(@PathVariable Long id) {
         service.delete(id);
         return ResponseEntity.noContent().build();

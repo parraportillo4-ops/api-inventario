@@ -33,6 +33,16 @@
   color: var(--muted);
 }
 
+.adminBadge {
+  margin-left: 0.5rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(234, 179, 8, 0.15);
+  color: #ca8a04;
+}
+
 .logout {
   padding: 0.4rem 0.75rem;
   border-radius: 8px;

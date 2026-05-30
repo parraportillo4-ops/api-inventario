@@ -1,3 +1,4 @@
+import type { Usuario } from './types'
 import { apiClient } from './client'
 
 export type LoginBody = { correo: string; password: string }
@@ -21,5 +22,10 @@ export async function login(body: LoginBody) {
 
 export async function register(body: RegisterBody) {
   const { data } = await apiClient.post<AuthResponse>('/auth/register', body)
+  return data
+}
+
+export async function getMe() {
+  const { data } = await apiClient.get<Usuario>('/auth/me')
   return data
 }

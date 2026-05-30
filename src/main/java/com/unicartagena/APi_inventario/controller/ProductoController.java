@@ -22,12 +22,12 @@ public class ProductoController {
 
     @GetMapping
     public List<Producto> listar() {
-        return service.findAll();
+        return service.findVisibleForCurrentUser();
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Producto> obtener(@PathVariable Long id) {
-        return ResponseEntity.ok(service.findById(id));
+        return ResponseEntity.ok(service.findByIdVisible(id));
     }
 
 @PostMapping

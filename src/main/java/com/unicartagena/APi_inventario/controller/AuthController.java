@@ -3,6 +3,7 @@ package com.unicartagena.APi_inventario.controller;
 import com.unicartagena.APi_inventario.entity.Usuario;
 import com.unicartagena.APi_inventario.repository.UsuarioRepository;
 import com.unicartagena.APi_inventario.security.JwtService;
+import com.unicartagena.APi_inventario.security.SecurityUtils;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -22,17 +23,20 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
+    private final SecurityUtils securityUtils;
 
     public AuthController(
             UsuarioRepository usuarioRepository,
             PasswordEncoder passwordEncoder,
             AuthenticationManager authenticationManager,
-            JwtService jwtService
+            JwtService jwtService,
+            SecurityUtils securityUtils
     ) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
+        this.securityUtils = securityUtils;
     }
 
     @PostMapping("/register")
@@ -46,7 +50,7 @@ public class AuthController {
         // establecer atributos
         usuario.setNombre(request.nombre());
         usuario.setApellido(request.apellido());
-        usuario.setTipoUsuario(request.tipoUsuario());
+        usuario.setTipoUsuario("USER");
         usuario.setTelefono(request.telefono());
         usuario.setCorreo(request.correo());
         usuario.setUbicacion(request.ubicacion());
@@ -55,6 +59,11 @@ public class AuthController {
         Usuario saved = usuarioRepository.save(usuario);
         String token = jwtService.generateToken(saved.getCorreo()); // generacion del token
         return ResponseEntity.status(HttpStatus.CREATED).body(new AuthResponse(token)); // envio del token al cliente
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Usuario> me() {
+        return ResponseEntity.ok(securityUtils.getCurrentUsuario());
     }
 
     @PostMapping("/login")

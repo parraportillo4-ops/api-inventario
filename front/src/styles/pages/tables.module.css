@@ -76,3 +76,49 @@
   font-size: 0.85rem;
   color: var(--muted);
 }
+
+.cardSale {
+  border-color: rgba(34, 197, 94, 0.35);
+  background: rgba(34, 197, 94, 0.06);
+}
+
+.cardBuy {
+  border-color: rgba(59, 130, 246, 0.35);
+  background: rgba(59, 130, 246, 0.06);
+}
+
+.badgeSale,
+.badgeBuy {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.badgeSale {
+  background: rgba(34, 197, 94, 0.15);
+  color: #16a34a;
+}
+
+.badgeBuy {
+  background: rgba(59, 130, 246, 0.15);
+  color: #2563eb;
+}
+
+.cardNeutral {
+  border-color: var(--border);
+  background: var(--surface-2);
+}
+
+.badgeNeutral {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(148, 163, 184, 0.15);
+  color: var(--muted);
+}

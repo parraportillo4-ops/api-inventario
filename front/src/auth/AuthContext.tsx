@@ -8,13 +8,12 @@ import {
   type ReactNode,
 } from 'react'
 import * as authApi from '../api/auth'
-import * as usuariosApi from '../api/usuarios'
 import { setStoredToken, getStoredToken } from '../api/client'
 import type { Usuario } from '../api/types'
-import { getSubjectFromToken } from './jwt'
 
 type AuthContextValue = {
   user: Usuario | null
+  isAdmin: boolean
   loading: boolean
   login: (body: authApi.LoginBody) => Promise<void>
   register: (body: authApi.RegisterBody) => Promise<void>
@@ -23,11 +22,12 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | null>(null)
 
-async function resolveUserFromToken(token: string): Promise<Usuario | null> {
-  const email = getSubjectFromToken(token)
-  if (!email) return null
-  const usuarios = await usuariosApi.listUsuarios()
-  return usuarios.find((u) => u.correo === email) ?? null
+async function resolveUserFromToken(): Promise<Usuario | null> {
+  try {
+    return await authApi.getMe()
+  } catch {
+    return null
+  }
 }
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -48,7 +48,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return
       }
       try {
-        const u = await resolveUserFromToken(token)
+        const u = await resolveUserFromToken()
         if (!cancelled) {
           if (u) setUser(u)
           else logout()
@@ -67,7 +67,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const login = useCallback(async (body: authApi.LoginBody) => {
     const { token } = await authApi.login(body)
     setStoredToken(token)
-    const u = await resolveUserFromToken(token)
+    const u = await resolveUserFromToken()
     if (!u) throw new Error('No se pudo cargar el usuario')
     setUser(u)
   }, [])
@@ -75,14 +75,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const register = useCallback(async (body: authApi.RegisterBody) => {
     const { token } = await authApi.register(body)
     setStoredToken(token)
-    const u = await resolveUserFromToken(token)
+    const u = await resolveUserFromToken()
     if (!u) throw new Error('No se pudo cargar el usuario')
     setUser(u)
   }, [])
 
+  const isAdmin = user?.tipoUsuario?.toUpperCase() === 'ADMIN'
+
   const value = useMemo(
-    () => ({ user, loading, login, register, logout }),
-    [user, loading, login, register, logout],
+    () => ({ user, isAdmin, loading, login, register, logout }),
+    [user, isAdmin, loading, login, register, logout],
   )
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
